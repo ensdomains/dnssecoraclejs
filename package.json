@@ -1,5 +1,5 @@
 {
-  "name": "dnssecoraclejs",
+  "name": "@ensdomains/dnssecoraclejs",
   "version": "0.1.0",
   "description": "A library for proving DNS records to the ENS DNSSEC oracle contracts",
   "main": "dist/index.js",
@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@ensdomains/dnsprovejs": "../dnsprovejs",
+    "@ensdomains/dnsprovejs": "^0.3.0",
     "@ensdomains/dnssec-oracle": "^0.2.0",
     "dns-packet": "^5.2.1",
     "ethers": "^5.0.30",

@@ -133,7 +133,7 @@ describe('dnsoraclejs', async () => {
         await tx1.wait();
 
         // Wait 301 seconds and try again
-        const oracle2 = new Oracle(oracleContract.address, ethers.provider, () => 1612868724000);
+        const oracle2 = new Oracle(oracleContract.address, ethers.provider, () => 1612915524000);
         const prover2 = makeProver(MATOKEN_1);
         const queryResult2 = await prover2.queryWithProof('TXT', '_ens.matoken.live');
         const result2 = await oracle2.getProofData(queryResult2);

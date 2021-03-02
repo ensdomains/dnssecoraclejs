@@ -8,7 +8,7 @@ module.exports = {
   solidity: "0.7.4",
   networks: {
     hardhat: {
-      initialDate: "2021-02-10T00:00:00"
+      initialDate: "2021-02-10T00:00:00Z"
     }
   }
 };

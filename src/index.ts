@@ -1,1 +1,1 @@
-import { Oracle, OutdatedDataError } from './oracle';
+export { Oracle, OutdatedDataError } from './oracle';

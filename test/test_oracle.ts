@@ -106,7 +106,7 @@ describe('dnsoraclejs', async () => {
         }
     });
 
-    it.only('processes a real record on TXT _ens.matoken.live correctly', async () => {
+    it('processes a real record on TXT _ens.matoken.live correctly', async () => {
         console.log('ethers.provider', ethers.provider)
         const oracle = new Oracle(oracleContract.address, ethers.provider);
 

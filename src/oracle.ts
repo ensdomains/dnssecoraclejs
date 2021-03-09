@@ -46,7 +46,6 @@ export class Oracle {
         logger.info(`${answer.answer.signature.data.typeCovered} ${answer.answer.signature.name} has no proofs already known`);
         return {
             data: this.encodeProofs(allProofs),
-            status: 0,
             proof: Buffer.from(utils.arrayify(await this.contract.anchors())),
         };
     }

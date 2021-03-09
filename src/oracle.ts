@@ -17,12 +17,6 @@ export class OutdatedDataError extends Error {
     }
 }
 
-enum Status {
-    None = 0,
-    Some = 1,
-    All = 2
-}
-
 export class Oracle {
     contract: DNSSEC;
     now: () => number;
@@ -32,44 +26,19 @@ export class Oracle {
         this.now = now || Date.now;
     }
 
-    decodeProofs(data: Buffer): SignedSet<any>[] {
-        const proofs = [];
-        for(let off = 0; off < data.length;) {
-            const datalen = data.readInt16BE(off);
-            const rrdata = data.slice(off + 2, off + 2 + datalen);
-            off += datalen + 2;
-            const siglen = data.readInt16BE(off);
-            const sigdata = data.slice(off + 2, off + 2 + siglen);
-            off += siglen + 2;
-            proofs.push(SignedSet.fromWire(rrdata, sigdata));
-        }
-        return proofs;
-    }
-    
-    decodeRrset(data: Buffer): packet.Answer[] {
-        const rrs = [];
-        let off = 0;
-        while(off < data.length) {
-            rrs.push(packet.answer.decode(data, off));
-            off += packet.answer.decode.bytes;
-        }
-        return rrs;
-    }
-
     // Takes a `ProvableAnswer` returned by dnsprovejs and converts it into a blob of proof
     // data for the DNSSEC oracle contract.
-    async getProofData(answer: ProvableAnswer<any>): Promise<{data: Buffer, status:Status, proof: Buffer}> {
+    async getProofData(answer: ProvableAnswer<any>): Promise<{data: Buffer, proof: Buffer}> {
         const allProofs = answer.proofs.concat([answer.answer]);
         for(let i = allProofs.length - 1; i >= 0; i--) {
             if(await this.knownProof(allProofs[i])) {
                 if(i == allProofs.length - 1) {
                     console.log(`All proofs for ${answer.answer.signature.data.typeCovered} ${answer.answer.signature.name} are already known`);
-                    return {data: Buffer.of(), status:2, proof: Buffer.of()};
+                    return {data: Buffer.of(), proof: Buffer.of()};
                 }
                 logger.info(`${answer.answer.signature.data.typeCovered} ${answer.answer.signature.name} has ${i + 1} of ${allProofs.length} proofs already known`);
                 return {
                     data: this.encodeProofs(allProofs.slice(i + 1, allProofs.length)),
-                    status:1,
                     proof: allProofs[i].toWire(false),
                 };
             }

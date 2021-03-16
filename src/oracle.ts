@@ -34,7 +34,7 @@ export class Oracle {
             if(await this.knownProof(allProofs[i])) {
                 if(i == allProofs.length - 1) {
                     console.log(`All proofs for ${answer.answer.signature.data.typeCovered} ${answer.answer.signature.name} are already known`);
-                    return {data: Buffer.of(), proof: Buffer.of()};
+                    return {data: Buffer.of(), proof: allProofs[allProofs.length - 1].toWire(false)};
                 }
                 logger.info(`${answer.answer.signature.data.typeCovered} ${answer.answer.signature.name} has ${i + 1} of ${allProofs.length} proofs already known`);
                 return {

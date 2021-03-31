@@ -132,13 +132,13 @@ describe('dnsoraclejs', async () => {
         const tx1 = await oracleContract.submitRRSets(result1.data, result1.proof);
         await tx1.wait();
 
-        // Wait 301 seconds and try again
-        const oracle2 = new Oracle(oracleContract.address, ethers.provider, () => 1612915524000);
+        // Wait 360 seconds and try again
+        await ethers.provider.send('evm_increaseTime', [360]);
+
+        const oracle2 = new Oracle(oracleContract.address, ethers.provider, () => 1612915583000);
         const prover2 = makeProver(MATOKEN_1);
         const queryResult2 = await prover2.queryWithProof('TXT', '_ens.matoken.live');
         const result2 = await oracle2.getProofData(queryResult2);
-
-        await ethers.provider.send('evm_increaseTime', [301]);
 
         const decodedData = decodeProofs(result2.data);
         const proofrrset = decodeRrset(result2.proof);

@@ -17,6 +17,11 @@ export class OutdatedDataError extends Error {
     }
 }
 
+// Compares two serial numbers using RFC1982 serial number math.
+function serialNumberGt(i1: number, i2: number): boolean {
+    return (i1 < i2 && i2 - i1 > 2147483648) || (i1 > i2 && i1 - i2 < 2147483648);
+}
+
 export class Oracle {
     contract: DNSSEC;
     now: () => number;
@@ -53,11 +58,12 @@ export class Oracle {
     private async knownProof(proof: SignedSet<any>): Promise<boolean> {
         const name = packet.name.encode(proof.signature.name);
         const type = types.toType(proof.signature.data.typeCovered);
-        const [inception, inserted, hash] = await this.contract.rrdata(type, name);
-        if(inception > proof.signature.data.inception) {
+        const [inception, expiration, hash] = await this.contract.rrdata(type, name);
+        // If the existing record is newer than our one, throw an error.
+        if(serialNumberGt(inception, proof.signature.data.inception)) {
             throw new OutdatedDataError(proof);
         }
-        const expired = inserted.toNumber() + proof.signature.data.originalTTL < this.now() / 1000;
+        const expired = serialNumberGt(this.now() / 1000, expiration + proof.signature.data.originalTTL);
         const proofHash = utils.keccak256(proof.toWire(false)).slice(0, 42);
         return (hash == proofHash) && !expired;
     }

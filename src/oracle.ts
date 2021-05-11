@@ -18,8 +18,8 @@ export class OutdatedDataError extends Error {
 }
 
 // Compares two serial numbers using RFC1982 serial number math.
-function serialNumberGte(i1: number, i2: number): boolean {
-    return (i1 < i2 && i2 - i1 > 2147483648) || (i1 > i2 && i1 - i2 < 2147483648);
+function serialNumberGt(i1: number, i2: number): boolean {
+    return (i1 < i2 && i2 - i1 > 0x7fffffff) || (i1 > i2 && i1 - i2 < 0x7fffffff);
 }
 
 export class Oracle {

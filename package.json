@@ -16,7 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "@ensdomains/dnsprovejs": "^0.3.7",
-    "@ensdomains/dnssec-oracle": "^0.2.0",
+    "@ensdomains/dnssec-oracle": "^0.4.0",
     "dns-packet": "^5.2.1",
     "dotenv": "^8.2.0",
     "ethers": "^5.0.30",

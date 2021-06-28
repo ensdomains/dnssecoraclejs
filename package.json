@@ -16,14 +16,14 @@
   "license": "ISC",
   "dependencies": {
     "@ensdomains/dnsprovejs": "^0.3.7",
-    "@ensdomains/dnssec-oracle": "^0.4.0",
+    "@ensdomains/ens-contracts": "0.0.5",
     "dns-packet": "^5.2.1",
     "dotenv": "^8.2.0",
     "ethers": "^5.0.30",
     "typescript-logging": "^1.0.0"
   },
   "devDependencies": {
-    "@ensdomains/buffer": "0.0.10",
+    "@ensdomains/buffer": "0.0.13",
     "@ensdomains/solsha1": "0.0.2",
     "@nomiclabs/hardhat-ethers": "^2.0.1",
     "@nomiclabs/hardhat-waffle": "^2.0.1",

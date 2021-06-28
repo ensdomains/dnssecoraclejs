@@ -5,10 +5,10 @@ import "hardhat-typechain";
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
-  solidity: "0.7.4",
+  solidity: "0.8.4",
   networks: {
     hardhat: {
-      initialDate: "2021-02-10T00:00:00Z"
+      initialDate: "2021-06-29T00:00:00Z"
     }
   }
 };

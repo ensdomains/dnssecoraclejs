@@ -1,8 +1,8 @@
 pragma solidity *;
-import '@ensdomains/dnssec-oracle/contracts/DNSSECImpl.sol';
-import '@ensdomains/dnssec-oracle/contracts/algorithms/RSASHA256Algorithm.sol';
-import '@ensdomains/dnssec-oracle/contracts/algorithms/P256SHA256Algorithm.sol';
-import '@ensdomains/dnssec-oracle/contracts/algorithms/DummyAlgorithm.sol';
-import '@ensdomains/dnssec-oracle/contracts/digests/SHA1Digest.sol';
-import '@ensdomains/dnssec-oracle/contracts/digests/SHA256Digest.sol';
-import '@ensdomains/dnssec-oracle/contracts/digests/DummyDigest.sol';
+import '@ensdomains/ens-contracts/contracts/dnssec-oracle/DNSSECImpl.sol';
+import '@ensdomains/ens-contracts/contracts/dnssec-oracle/algorithms/RSASHA256Algorithm.sol';
+import '@ensdomains/ens-contracts/contracts/dnssec-oracle/algorithms/P256SHA256Algorithm.sol';
+import '@ensdomains/ens-contracts/contracts/dnssec-oracle/algorithms/DummyAlgorithm.sol';
+import '@ensdomains/ens-contracts/contracts/dnssec-oracle/digests/SHA1Digest.sol';
+import '@ensdomains/ens-contracts/contracts/dnssec-oracle/digests/SHA256Digest.sol';
+import '@ensdomains/ens-contracts/contracts/dnssec-oracle/digests/DummyDigest.sol';

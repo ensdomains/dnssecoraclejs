@@ -2,8 +2,8 @@ import * as packet from 'dns-packet'
 import * as types from 'dns-packet/types';
 import { utils } from 'ethers';
 import { Provider } from "@ethersproject/providers";
-import { DNSSEC } from './typechain/DNSSEC';
-import { DNSSEC__factory } from './typechain/factories/DNSSEC__factory';
+import { DNSSEC } from '../typechain/DNSSEC';
+import { DNSSEC__factory } from '../typechain/factories/DNSSEC__factory';
 import { ProvableAnswer, SignedSet } from '@ensdomains/dnsprovejs';
 import { logger } from './log'
 
@@ -22,6 +22,11 @@ function serialNumberGt(i1: number, i2: number): boolean {
     return (i1 < i2 && i2 - i1 > 0x7fffffff) || (i1 > i2 && i1 - i2 < 0x7fffffff);
 }
 
+export interface RRSetWithSignature {
+    rrset: Buffer;
+    sig: Buffer;
+}
+
 export class Oracle {
     contract: DNSSEC;
     now: () => number;
@@ -33,24 +38,24 @@ export class Oracle {
 
     // Takes a `ProvableAnswer` returned by dnsprovejs and converts it into a blob of proof
     // data for the DNSSEC oracle contract.
-    async getProofData(answer: ProvableAnswer<any>): Promise<{data: Buffer, proof: Buffer}> {
+    async getProofData(answer: ProvableAnswer<any>): Promise<{rrsets: RRSetWithSignature[], proof: Buffer}> {
         const allProofs = answer.proofs.concat([answer.answer]);
         for(let i = allProofs.length - 1; i >= 0; i--) {
             if(await this.knownProof(allProofs[i])) {
                 if(i == allProofs.length - 1) {
-                    console.log(`All proofs for ${answer.answer.signature.data.typeCovered} ${answer.answer.signature.name} are already known`);
-                    return {data: Buffer.of(), proof: allProofs[allProofs.length - 1].toWire(false)};
+                    logger.info(`All proofs for ${answer.answer.signature.data.typeCovered} ${answer.answer.signature.name} are already known`);
+                    return {rrsets: [], proof: allProofs[allProofs.length - 1].toWire(false)};
                 }
                 logger.info(`${answer.answer.signature.data.typeCovered} ${answer.answer.signature.name} has ${i + 1} of ${allProofs.length} proofs already known`);
                 return {
-                    data: this.encodeProofs(allProofs.slice(i + 1, allProofs.length)),
+                    rrsets: this.encodeProofs(allProofs.slice(i + 1, allProofs.length)),
                     proof: allProofs[i].toWire(false),
                 };
             }
         }
         logger.info(`${answer.answer.signature.data.typeCovered} ${answer.answer.signature.name} has no proofs already known`);
         return {
-            data: this.encodeProofs(allProofs),
+            rrsets: this.encodeProofs(allProofs),
             proof: Buffer.from(utils.arrayify(await this.contract.anchors())),
         };
     }
@@ -63,24 +68,12 @@ export class Oracle {
         if(serialNumberGt(inception, proof.signature.data.inception)) {
             throw new OutdatedDataError(proof);
         }
-        const expired = serialNumberGt(this.now() / 1000, expiration + proof.signature.data.originalTTL);
+        const expired = serialNumberGt(this.now() / 1000, expiration);
         const proofHash = utils.keccak256(proof.toWire(false)).slice(0, 42);
         return (hash == proofHash) && !expired;
     }
 
-    private encodeProofs(proofs: SignedSet<any>[]): Buffer {
-        const buffers = new Array<Buffer>(proofs.length);
-        for(let i = 0; i < proofs.length; i++) {
-            const proof = proofs[i];
-            const data = proof.toWire(true);
-            const sig = proof.signature.data.signature;
-            const buf = Buffer.alloc(data.length + sig.length + 4);
-            buf.writeInt16BE(data.length, 0);
-            data.copy(buf, 2);
-            buf.writeInt16BE(sig.length, data.length + 2);
-            sig.copy(buf, data.length + 4);
-            buffers[i] = buf;
-        }
-        return Buffer.concat(buffers);
+    private encodeProofs(proofs: SignedSet<any>[]): RRSetWithSignature[] {
+        return proofs.map((proof) => ({rrset: proof.toWire(true), sig: proof.signature.data.signature}));
     }
 }

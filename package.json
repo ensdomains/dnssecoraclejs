@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "build": "hardhat compile && tsc",
-    "test": "hardhat test",
+    "test": "npm run build && hardhat test",
     "prepublishOnly": "npm run build"
   },
   "repository": {

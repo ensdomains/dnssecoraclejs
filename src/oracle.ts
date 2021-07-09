@@ -2,8 +2,8 @@ import * as packet from 'dns-packet'
 import * as types from 'dns-packet/types';
 import { utils } from 'ethers';
 import { Provider } from "@ethersproject/providers";
-import { DNSSEC } from '../typechain/DNSSEC';
-import { DNSSEC__factory } from '../typechain/factories/DNSSEC__factory';
+import { DNSSEC } from './typechain/DNSSEC';
+import { DNSSEC__factory } from './typechain/factories/DNSSEC__factory';
 import { ProvableAnswer, SignedSet } from '@ensdomains/dnsprovejs';
 import { logger } from './log'
 
@@ -53,6 +53,7 @@ export class Oracle {
                 };
             }
         }
+        console.log('**** dnssecoraclejs:getProofData')
         logger.info(`${answer.answer.signature.data.typeCovered} ${answer.answer.signature.name} has no proofs already known`);
         return {
             rrsets: this.encodeProofs(allProofs),

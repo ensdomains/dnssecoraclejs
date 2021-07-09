@@ -53,7 +53,6 @@ export class Oracle {
                 };
             }
         }
-        console.log('**** dnssecoraclejs:getProofData')
         logger.info(`${answer.answer.signature.data.typeCovered} ${answer.answer.signature.name} has no proofs already known`);
         return {
             rrsets: this.encodeProofs(allProofs),

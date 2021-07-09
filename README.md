@@ -14,7 +14,7 @@ npm install '@ensdomains/dnssecoraclejs' --save
 import { Oracle } from '@ensdomains/dnssecoraclejs'
 const oracle = new Oracle(oracleAddress, provider)
 // Refer to https://github.com/ensdomains/dnsprovejs for how to query result data
-const { data, proof } = oracle.getProofData(result)
+const { rrsets, proof } = oracle.getProofData(result)
 ```
 
 ## Testing

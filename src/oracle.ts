@@ -5,7 +5,7 @@ import { Provider } from "@ethersproject/providers";
 import { DNSSEC } from './typechain/DNSSEC';
 import { DNSSEC__factory } from './typechain/factories/DNSSEC__factory';
 import { ProvableAnswer, SignedSet } from '@ensdomains/dnsprovejs';
-import { logger } from './log'
+// import { logger } from './log'
 
 export class OutdatedDataError extends Error {
     answer: SignedSet<any>;
@@ -43,17 +43,17 @@ export class Oracle {
         for(let i = allProofs.length - 1; i >= 0; i--) {
             if(await this.knownProof(allProofs[i])) {
                 if(i == allProofs.length - 1) {
-                    logger.info(`All proofs for ${answer.answer.signature.data.typeCovered} ${answer.answer.signature.name} are already known`);
+                    console.log(`All proofs for ${answer.answer.signature.data.typeCovered} ${answer.answer.signature.name} are already known`);
                     return {rrsets: [], proof: allProofs[allProofs.length - 1].toWire(false)};
                 }
-                logger.info(`${answer.answer.signature.data.typeCovered} ${answer.answer.signature.name} has ${i + 1} of ${allProofs.length} proofs already known`);
+                console.log(`${answer.answer.signature.data.typeCovered} ${answer.answer.signature.name} has ${i + 1} of ${allProofs.length} proofs already known`);
                 return {
                     rrsets: this.encodeProofs(allProofs.slice(i + 1, allProofs.length)),
                     proof: allProofs[i].toWire(false),
                 };
             }
         }
-        logger.info(`${answer.answer.signature.data.typeCovered} ${answer.answer.signature.name} has no proofs already known`);
+        console.log(`${answer.answer.signature.data.typeCovered} ${answer.answer.signature.name} has no proofs already known`);
         return {
             rrsets: this.encodeProofs(allProofs),
             proof: Buffer.from(utils.arrayify(await this.contract.anchors())),

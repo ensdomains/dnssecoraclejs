@@ -19,7 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@ensdomains/dnsprovejs": "^0.3.7",
+    "@ensdomains/dnsprovejs": "ensdomains/dnsprovejs#canonical-sort",
     "@ensdomains/ens-contracts": "0.0.7",
     "dns-packet": "^5.2.1",
     "dotenv": "^8.2.0",

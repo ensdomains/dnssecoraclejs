@@ -1,5 +1,4 @@
-import "@nomiclabs/hardhat-waffle";
-import "hardhat-typechain";
+import "@nomicfoundation/hardhat-toolbox";
 
 /**
  * @type import('hardhat/config').HardhatUserConfig
@@ -10,8 +9,5 @@ module.exports = {
     hardhat: {
       initialDate: "2021-06-29T00:00:00Z"
     }
-  },
-  typechain: {
-    outDir: "src/typechain",
   }
 };
